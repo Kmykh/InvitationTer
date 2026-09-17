@@ -96,7 +96,7 @@ body {
 }
 
 .invitation-card-container {
-  padding: 0 0 32px 0;
+  padding: 0 0 calc(48px + env(safe-area-inset-bottom, 24px)) 0;
   position: relative;
   z-index: 2;
 }
@@ -830,22 +830,24 @@ body {
   pointer-events: none;
 }
 
-/* High-Visibility Glassmorphic Caption Card */
+/* High-Visibility Caption Card (Optimized for Safari iOS without backdrop-filter dropouts) */
 .recuerdos-caption-glass-card {
   position: absolute;
   left: 12px;
   right: 12px;
   bottom: 12px;
   z-index: 4;
-  background: rgba(44, 10, 18, 0.78);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.45);
+  background: linear-gradient(135deg, rgba(44, 10, 18, 0.93) 0%, rgba(30, 6, 12, 0.95) 100%);
+  border: 1px solid rgba(212, 175, 55, 0.55);
   border-radius: 16px;
   padding: 11px 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   text-align: left;
   pointer-events: none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .recuerdos-caption-badge-row {
@@ -1472,23 +1474,25 @@ body {
   gap: 0;
 }
 
-/* Staggered Slide-In Animation for each milestone */
+/* Staggered Slide-In Animation for each milestone (No scale transform to prevent font subpixel tearing in iOS) */
 .animated-timeline-step {
   display: flex;
   gap: 16px;
   min-height: 120px;
   opacity: 0;
   animation: timelineItemSlideIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 @keyframes timelineItemSlideIn {
   0% {
     opacity: 0;
-    transform: translateY(18px) scale(0.98);
+    transform: translateY(18px);
   }
   100% {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
@@ -1566,24 +1570,26 @@ body {
   padding-bottom: 24px;
 }
 
-/* Glassmorphic Milestone Card (Suave, elegante) */
+/* Luxury Milestone Card (Crisp & High-Contrast for iOS Safari) */
 .timeline-card-box {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(212, 175, 55, 0.25);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(212, 175, 55, 0.35);
   border-radius: 16px;
   padding: 14px 16px;
-  box-shadow: 0 4px 16px rgba(104, 25, 44, 0.05);
+  box-shadow: 0 4px 18px rgba(104, 25, 44, 0.06);
   text-align: left;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .timeline-card-box:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(104, 25, 44, 0.1);
-  border-color: rgba(212, 175, 55, 0.45);
-  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(212, 175, 55, 0.55);
+  background: #FFFFFF;
 }
 
 .timeline-card-header {
@@ -1607,6 +1613,7 @@ body {
   color: #B8860B;
   letter-spacing: 1.5px;
   text-transform: uppercase;
+  text-rendering: optimizeLegibility;
 }
 
 .timeline-title {
@@ -1616,14 +1623,17 @@ body {
   color: var(--color-burgundy);
   margin-bottom: 4px;
   line-height: 1.2;
+  text-rendering: optimizeLegibility;
 }
 
 .timeline-location {
   font-family: var(--font-title);
   font-size: 0.85rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text-main);
   letter-spacing: 0.5px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .timeline-address {
@@ -1732,9 +1742,7 @@ body {
   flex-direction: column;
   gap: 10px;
   padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 16px;
   border: 1px solid rgba(212, 175, 55, 0.3);
   box-shadow: 0 4px 16px rgba(104, 25, 44, 0.05);
@@ -1767,9 +1775,7 @@ body {
   width: 100%;
   border-radius: 22px;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: #FFFFFF;
   border: 1.5px solid rgba(212, 175, 55, 0.4);
   box-shadow: 0 10px 28px rgba(104, 25, 44, 0.08);
   margin-bottom: 14px;
@@ -3189,9 +3195,7 @@ body {
 
 /* Warm Welcome Card */
 .footer-welcome-banner {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.95);
   border: 1.5px solid rgba(212, 175, 55, 0.35);
   border-radius: 18px;
   padding: 14px 18px;
@@ -3326,9 +3330,7 @@ body {
   position: relative;
   max-width: 350px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
   border: 1.5px solid rgba(212, 175, 55, 0.35);
   border-radius: 22px;
   padding: 22px 18px 18px 18px;
