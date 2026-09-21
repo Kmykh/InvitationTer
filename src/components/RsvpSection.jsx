@@ -190,12 +190,11 @@ export default function RsvpSection({ rsvp, celebrant }) {
             <div className="success-icon-badge-glow">
               <CheckCircle2 size={40} />
             </div>
-            <span className="success-celebration-eyebrow">¡ASISTENCIA REGISTRADA!</span>
             <h4 className="success-name-heading">¡Muchas gracias, {guestName}!</h4>
             <p className="success-message-text">
               {willAttend === 'si' 
-                ? `Tu confirmación para ${companions} persona(s) ha sido recibida con alegría para celebrar los 50 años de ${celebrant || "Teresa Isabel"}.` 
-                : 'Agradecemos tu respuesta. Tendremos muy presentes tus bendiciones y cariño en este día especial.'}
+                ? `Nos llena de inmensa alegría saber que contaremos contigo. Hemos anotado tu confirmación para ${companions} persona(s) para celebrar juntos este gran día inolvidable.` 
+                : 'Apreciamos sinceramente que nos hayas avisado. Aunque te echaremos de menos, sabemos que estarás presente de corazón enviando tus bendiciones a la cumpleañera.'}
             </p>
             <div className="success-accent-divider">
               <span>✦</span>

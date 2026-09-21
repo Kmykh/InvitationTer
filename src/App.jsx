@@ -6,9 +6,9 @@ import PhotoAlbum from './components/PhotoAlbum';
 import CalendarCountdown from './components/CalendarCountdown';
 import Itinerary from './components/Itinerary';
 import MusicSection from './components/MusicSection';
-import LocationHelper from './components/LocationHelper';
 import RsvpSection from './components/RsvpSection';
 import Footer from './components/Footer';
+import FloatingAudioPlayer from './components/FloatingAudioPlayer';
 
 export default function App() {
   const [isOpened, setIsOpened] = useState(false);
@@ -35,6 +35,9 @@ export default function App() {
 
       {/* Envelope screen */}
       <Envelope onOpen={handleEnvelopeOpen} />
+      
+      {/* Background Audio Player */}
+      <FloatingAudioPlayer isOpened={isOpened} />
 
       <main className={`invitation-main-content ${isOpened ? 'is-visible' : 'is-hidden'}`}>
         <div className="invitation-card-container">
@@ -56,7 +59,7 @@ export default function App() {
             onCalendarComplete={handleCalendarComplete}
           />
 
-          {/* 3. Follow-up: Photo album, itinerary, music amenizan, map, and RSVP unlock after the date */}
+          {/* 3. Follow-up: Photo album, itinerary, music amenizan, and RSVP unlock after the date */}
           {showRemaining && (
             <div className="fade-up-enter">
               <PhotoAlbum 
@@ -66,11 +69,6 @@ export default function App() {
               <Itinerary itinerary={EVENT_DATA.itinerary} />
 
               <MusicSection musicians={EVENT_DATA.musicians} />
-
-              <LocationHelper 
-                locationDetails={EVENT_DATA.locationDetails} 
-                churchDetails={EVENT_DATA.churchDetails}
-              />
 
               <RsvpSection 
                 rsvp={EVENT_DATA.rsvp}

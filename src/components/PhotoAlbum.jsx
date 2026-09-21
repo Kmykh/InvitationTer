@@ -33,15 +33,16 @@ export default function PhotoAlbum({ photos = [] }) {
     return () => clearInterval(timer);
   }, [photoList.length, isPaused]);
 
-  // Keep active thumbnail in view
+  // Keep active thumbnail in view (horizontal scroll only)
   useEffect(() => {
     if (thumbnailsRef.current) {
       const activeThumb = thumbnailsRef.current.children[currentIndex];
       if (activeThumb) {
-        activeThumb.scrollIntoView({
-          behavior: 'smooth',
-          inline: 'center',
-          block: 'nearest'
+        const container = thumbnailsRef.current;
+        const scrollLeft = activeThumb.offsetLeft - (container.offsetWidth / 2) + (activeThumb.offsetWidth / 2);
+        container.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
         });
       }
     }

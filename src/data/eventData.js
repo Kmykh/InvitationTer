@@ -119,7 +119,7 @@ export const EVENT_DATA = {
       caption: "Sonrisas y recuerdos que se atesoran por siempre en el corazón" 
     },
     { 
-      src: "/images/2.jpeg", 
+      src: "/images/2.jpg", 
       title: "Amor & Familia", 
       caption: "El regalo y la bendición más grande de mi vida" 
     },
