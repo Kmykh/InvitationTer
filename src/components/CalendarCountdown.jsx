@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar as CalendarIcon, Sparkles } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Sparkles } from 'lucide-react';
 
 export default function CalendarCountdown({ targetDate, dateFormatted, isVisible = true, onCalendarComplete }) {
   const [timeLeft, setTimeLeft] = useState({
@@ -64,10 +64,14 @@ export default function CalendarCountdown({ targetDate, dateFormatted, isVisible
   }, [targetDate]);
 
   const addToGoogleCalendar = () => {
-    const title = encodeURIComponent("Mis 50 Años - Teresa (Celebración)");
-    const details = encodeURIComponent("Misa: 11:00 AM | Recepción: 1:00 PM | Cantuta del Centro, Jr. San Martín, La Punta - Sapallanga");
-    const location = encodeURIComponent("Cantuta del centro Jr. San Martin, La Punta - Sapallanga, Huancayo");
-    const dates = "20261010T160000Z/20261011T050000Z";
+    const title = encodeURIComponent("Mis 50 Años - Teresa Isabel (Celebración)");
+    const details = encodeURIComponent(
+      "Misa de Salud: 12:00 P.M. en Parroquia San Jacinto - La Punta\n" +
+      "Recepción: Local de recepciones “La Cantuta del Centro” (Jr. San Martín, La Punta - Sapallanga. Ref. paradero La Oyada a 2 cuadras subiendo hacia Mallqui)\n" +
+      "Amenizan: Agrupación Reyes Latinos & Orquesta Internacional Fusión Juvenil Son Class Perú"
+    );
+    const location = encodeURIComponent("Local de recepciones La Cantuta del Centro, Jr. San Martín, La Punta - Sapallanga, Huancayo");
+    const dates = "20261010T170000Z/20261011T050000Z";
     window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dates}&details=${details}&location=${location}`, '_blank');
   };
 
@@ -76,38 +80,47 @@ export default function CalendarCountdown({ targetDate, dateFormatted, isVisible
   return (
     <section className="calendar-countdown-section">
       <div className="ethereal-date-stage">
-        {/* 1. Introductory phrase (Soft, delicate, no bold) */}
+        {/* 1. Introductory phrase */}
         <div className={`calendar-editorial-phrase soft-stagger-item ${stepPhrase ? 'is-revealed' : ''}`}>
           <span className="phrase-ornament">✦</span>
-          <span className="phrase-main-text">Te espero este inolvidable día</span>
+          <span className="phrase-main-text">Te esperamos en este día inolvidable</span>
           <span className="phrase-ornament">✦</span>
         </div>
 
-        {/* 2. Month (Soft, airy, no bold) */}
+        {/* 2. Month */}
         <div className={`date-month-floating soft-stagger-item ${stepMonth ? 'is-revealed' : ''}`}>
           <span className="sparkle-gold">✦</span>
           <span>{dateFormatted.monthName}</span>
           <span className="sparkle-gold">✦</span>
         </div>
 
-        {/* 3. Hero Date display: Sábado 10 2026 (Serif suave, sin negrita) */}
-        <div className={`date-hero-floating soft-stagger-item ${stepDate ? 'is-revealed' : ''}`}>
-          <div className="date-side-floating text-right">
-            <span className="side-text-float">{dateFormatted.dayOfWeek}</span>
-            <div className="gold-line"></div>
+        {/* 3. Hero Date display: Sábado | 10 | 12:00 P.M. with Year 2026 */}
+        <div className={`date-hero-card-flyer soft-stagger-item ${stepDate ? 'is-revealed' : ''}`}>
+          <div className="date-flyer-row">
+            <div className="date-flyer-col left">
+              <span className="flyer-day-name">{dateFormatted.dayOfWeek}</span>
+              <div className="gold-line-mini"></div>
+            </div>
+
+            <div className="date-flyer-day-number">
+              {dateFormatted.dayNumber}
+            </div>
+
+            <div className="date-flyer-col right">
+              <div className="flyer-time-badge">
+                <Clock size={14} className="flyer-clock-icon" />
+                <span className="flyer-time-val">{dateFormatted.time || "12:00 P.M."}</span>
+              </div>
+              <div className="gold-line-mini"></div>
+            </div>
           </div>
 
-          <div className="date-number-massive">
-            {dateFormatted.dayNumber}
-          </div>
-
-          <div className="date-side-floating text-left">
-            <span className="side-text-float">{dateFormatted.year}</span>
-            <div className="gold-line"></div>
+          <div className="date-flyer-year-row">
+            <span className="flyer-year-text">{dateFormatted.year}</span>
           </div>
         </div>
 
-        {/* 4. Calendar Action Button (Suave y fino) */}
+        {/* 4. Calendar Action Button */}
         <div className={`calendar-btn-container soft-stagger-item ${stepButton ? 'is-revealed' : ''}`}>
           <button 
             type="button" 

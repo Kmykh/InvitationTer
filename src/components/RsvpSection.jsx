@@ -79,7 +79,7 @@ export default function RsvpSection({ rsvp, celebrant }) {
           <span className="recuerdos-line"></span>
         </div>
         <p className="rsvp-sub-phrase">
-          Acompáñanos a celebrar los 50 años de Teresa. Por favor confirma tu presencia.
+          Acompáñanos a celebrar los 50 años de {celebrant || "Teresa Isabel"}. Por favor confirma tu presencia.
         </p>
       </div>
 
@@ -181,7 +181,7 @@ export default function RsvpSection({ rsvp, celebrant }) {
 
             {/* Updated Deadline: 01 de Octubre de 2026 */}
             <div className="rsvp-deadline-pill">
-              <span>📅 Confirmar antes del <strong>01 de Octubre de 2026</strong></span>
+              <span>Confirmar antes del <strong>01 de Octubre de 2026</strong></span>
             </div>
           </form>
         ) : (
@@ -194,7 +194,7 @@ export default function RsvpSection({ rsvp, celebrant }) {
             <h4 className="success-name-heading">¡Muchas gracias, {guestName}!</h4>
             <p className="success-message-text">
               {willAttend === 'si' 
-                ? `Tu confirmación para ${companions} persona(s) ha sido recibida con alegría para celebrar los 50 años de Teresa.` 
+                ? `Tu confirmación para ${companions} persona(s) ha sido recibida con alegría para celebrar los 50 años de ${celebrant || "Teresa Isabel"}.` 
                 : 'Agradecemos tu respuesta. Tendremos muy presentes tus bendiciones y cariño en este día especial.'}
             </p>
             <div className="success-accent-divider">

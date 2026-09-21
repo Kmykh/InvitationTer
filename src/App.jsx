@@ -5,6 +5,7 @@ import IntroSection from './components/IntroSection';
 import PhotoAlbum from './components/PhotoAlbum';
 import CalendarCountdown from './components/CalendarCountdown';
 import Itinerary from './components/Itinerary';
+import MusicSection from './components/MusicSection';
 import LocationHelper from './components/LocationHelper';
 import RsvpSection from './components/RsvpSection';
 import Footer from './components/Footer';
@@ -37,16 +38,17 @@ export default function App() {
 
       <main className={`invitation-main-content ${isOpened ? 'is-visible' : 'is-hidden'}`}>
         <div className="invitation-card-container">
-          {/* 1. First: Animated Intro with "Estás invitada", Name, and Dedication phrase */}
+          {/* 1. First: Animated Intro with Thanksgiving prayer, "Mis 50 Años", "Teresa Isabel", and Hosts */}
           <IntroSection 
             celebrant={EVENT_DATA.celebrant}
             age={EVENT_DATA.age}
-            phrase={EVENT_DATA.phrase}
+            thanksgiving={EVENT_DATA.thanksgiving}
+            invitationText={EVENT_DATA.invitationText}
             isOpened={isOpened}
             onIntroComplete={handleIntroComplete}
           />
 
-          {/* 2. Successive: Appears step by step once dedication phrase finishes */}
+          {/* 2. Successive: Sábado 10 de Octubre 2026 - 12:00 P.M. & Countdown */}
           <CalendarCountdown 
             targetDate={EVENT_DATA.date}
             dateFormatted={EVENT_DATA.dateFormatted}
@@ -54,7 +56,7 @@ export default function App() {
             onCalendarComplete={handleCalendarComplete}
           />
 
-          {/* 3. Follow-up: Photo album, itinerary, map, and RSVP unlock after the date */}
+          {/* 3. Follow-up: Photo album, itinerary, music amenizan, map, and RSVP unlock after the date */}
           {showRemaining && (
             <div className="fade-up-enter">
               <PhotoAlbum 
@@ -63,7 +65,12 @@ export default function App() {
 
               <Itinerary itinerary={EVENT_DATA.itinerary} />
 
-              <LocationHelper locationDetails={EVENT_DATA.locationDetails} />
+              <MusicSection musicians={EVENT_DATA.musicians} />
+
+              <LocationHelper 
+                locationDetails={EVENT_DATA.locationDetails} 
+                churchDetails={EVENT_DATA.churchDetails}
+              />
 
               <RsvpSection 
                 rsvp={EVENT_DATA.rsvp}

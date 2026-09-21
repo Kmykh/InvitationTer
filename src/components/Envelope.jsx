@@ -187,10 +187,10 @@ export default function Envelope({ onOpen }) {
           </div>
         </div>
 
-        {/* Subdued footer blessing - Estructurado en dos líneas para evitar cortes */}
+        {/* Subdued footer blessing */}
         <div className={`envelope-bottom-blessing ${isOpening ? 'fade-out-early' : ''}`}>
-          <p className="blessing-quote">Con la bendición de Dios y mi familia</p>
-          <span className="blessing-name">TERESA</span>
+          <p className="blessing-quote">Con la bendición de Dios, hijos, esposo y familiares</p>
+          <span className="blessing-name">TERESA ISABEL</span>
         </div>
       </div>
     </>

@@ -3,58 +3,91 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function PhotoAlbum({ photos = [] }) {
   const defaultPhotos = [
-    { src: '/images/2.jpeg', title: 'Celebrando la vida', caption: '50 Años de amor y alegría' },
-    { src: '/images/3.jpeg', title: 'Momentos inolvidables', caption: 'Siempre sonriendo y compartiendo' },
-    { src: '/images/1.jpeg', title: 'Aventuras y gratitud', caption: 'Agradecida con cada día vivido' }
+    { src: '/images/portada.jpeg', title: 'Teresa Isabel', caption: '50 años de vida, fe y amor, celebrando la dicha de estar juntos.', isCover: true },
+    { src: '/images/1.jpeg', title: 'Momentos Inolvidables', caption: 'Sonrisas sinceras que se quedan grabadas en el corazón para siempre.' },
+    { src: '/images/2.jpeg', title: 'Amor y Familia', caption: 'El mayor tesoro y la bendición más grande que Dios me ha regalado.' },
+    { src: '/images/3.jpeg', title: 'Gratitud Infinita', caption: 'Agradecida por cada paso, cada abrazo y cada bendición en el camino.' },
+    { src: '/images/4.jpeg', title: 'Alegría Compartida', caption: 'La felicidad se multiplica cuando se comparte con las personas que amas.' },
+    { src: '/images/5.jpeg', title: 'Paz y Plenitud', caption: '50 años de historias, memorias doradas y amor incondicional.' },
+    { src: '/images/6.jpeg', title: 'Recuerdos de Oro', caption: 'Cada instante vivido es una joya que brilla en el alma.' },
+    { src: '/images/7.jpeg', title: 'Dicha y Bendición', caption: 'Celebrando la vida con el corazón lleno de gozo y esperanza.' }
   ];
 
   const photoList = (photos && photos.length > 0) ? photos : defaultPhotos;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [animDirection, setAnimDirection] = useState('next');
+  
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const thumbnailsRef = useRef(null);
 
-  // Auto-advance every 5 seconds
+  // Auto-advance every 5.5s
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % photoList.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [photoList.length]);
+    if (isPaused) return;
 
-  const prevSlide = () => {
+    const timer = setInterval(() => {
+      setAnimDirection('next');
+      setCurrentIndex((prev) => (prev + 1) % photoList.length);
+    }, 5500);
+
+    return () => clearInterval(timer);
+  }, [photoList.length, isPaused]);
+
+  // Keep active thumbnail in view
+  useEffect(() => {
+    if (thumbnailsRef.current) {
+      const activeThumb = thumbnailsRef.current.children[currentIndex];
+      if (activeThumb) {
+        activeThumb.scrollIntoView({
+          behavior: 'smooth',
+          inline: 'center',
+          block: 'nearest'
+        });
+      }
+    }
+  }, [currentIndex]);
+
+  const prevSlide = (e) => {
+    if (e) e.stopPropagation();
+    setAnimDirection('prev');
     setCurrentIndex((prev) => (prev - 1 + photoList.length) % photoList.length);
   };
 
-  const nextSlide = () => {
+  const nextSlide = (e) => {
+    if (e) e.stopPropagation();
+    setAnimDirection('next');
     setCurrentIndex((prev) => (prev + 1) % photoList.length);
   };
 
   const handleTouchStart = (e) => {
+    setIsPaused(true);
     touchStartX.current = e.targetTouches[0].clientX;
   };
 
-  const handleTouchMove = (e) => {
-    touchEndX.current = e.targetTouches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStartX.current || !touchEndX.current) return;
-    const distance = touchStartX.current - touchEndX.current;
-    if (distance > 45) {
+  const handleTouchEnd = (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const distance = touchStartX.current - touchEndX;
+    if (distance > 40) {
       nextSlide();
-    } else if (distance < -45) {
+    } else if (distance < -40) {
       prevSlide();
     }
-    touchStartX.current = 0;
-    touchEndX.current = 0;
+    setTimeout(() => setIsPaused(false), 2500);
   };
+
+  const handleSelectThumb = (index) => {
+    setAnimDirection(index > currentIndex ? 'next' : 'prev');
+    setCurrentIndex(index);
+  };
+
+  const currentPhoto = photoList[currentIndex] || photoList[0];
 
   return (
     <section className="recuerdos-showcase-section">
-      {/* Refined Header matching the rest of the invitation */}
+      {/* Refined Minimalist Header */}
       <div className="recuerdos-header">
-        <span className="recuerdos-eyebrow">MOMENTOS INOLVIDABLES</span>
-        <h3 className="recuerdos-title">Recuerdos</h3>
+        <span className="recuerdos-eyebrow">ÁLBUM DE RECUERDOS</span>
+        <h3 className="recuerdos-title">Momentos Inolvidables</h3>
         <div className="recuerdos-gold-divider">
           <span className="recuerdos-line"></span>
           <span className="recuerdos-star">✦</span>
@@ -62,25 +95,18 @@ export default function PhotoAlbum({ photos = [] }) {
         </div>
       </div>
 
-      {/* Swipe Interactive Guide Hint (para que el usuario sepa que puede deslizar) */}
-      <div className="recuerdos-swipe-guide">
-        <span className="guide-arrow pulse-left">‹</span>
-        <span className="guide-touch-icon">👆</span>
-        <span className="guide-label">Desliza para ver más recuerdos</span>
-        <span className="guide-arrow pulse-right">›</span>
-      </div>
-
-      {/* Modern seamless photo showcase */}
+      {/* Main Minimalist Carousel Container (Borderless & Clean) */}
       <div 
-        className="recuerdos-carousel-wrapper"
+        className="recuerdos-minimal-wrapper"
         onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Floating circular navigation buttons */}
+        {/* Navigation Arrows (Delicate and elegant) */}
         <button 
           type="button" 
-          className="recuerdos-nav-btn prev" 
+          className="recuerdos-nav-arrow prev" 
           onClick={prevSlide} 
           aria-label="Foto anterior"
         >
@@ -89,72 +115,66 @@ export default function PhotoAlbum({ photos = [] }) {
 
         <button 
           type="button" 
-          className="recuerdos-nav-btn next" 
+          className="recuerdos-nav-arrow next" 
           onClick={nextSlide} 
           aria-label="Foto siguiente"
         >
           <ChevronRight size={22} />
         </button>
 
-        {/* The Frame */}
-        <div className="recuerdos-photo-frame">
-          {/* Photo Counter Pill (ej: 1 / 3) */}
-          <div className="recuerdos-counter-pill">
-            <span className="counter-current">{currentIndex + 1}</span>
-            <span className="counter-sep">/</span>
-            <span className="counter-total">{photoList.length}</span>
+        {/* Minimalist Borderless Photo Frame (No click to enlarge, clean luxury) */}
+        <div className="recuerdos-borderless-frame">
+          {/* Subtle Corner Counter Tag */}
+          <div className="recuerdos-pill-overlay">
+            {currentPhoto.isCover ? (
+              <span className="pill-portada">PORTADA</span>
+            ) : (
+              <span className="pill-counter">{currentIndex + 1} / {photoList.length}</span>
+            )}
           </div>
 
-          <div 
-            className="recuerdos-slider-track" 
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
-            {photoList.map((photo, index) => (
-              <div key={index} className="recuerdos-slide-card">
-                <img 
-                  src={photo.src} 
-                  alt={photo.title || `Recuerdo ${index + 1}`} 
-                  className="recuerdos-slide-img" 
-                />
-                
-                {/* Subtle bottom gradient */}
-                <div className="recuerdos-overlay-gradient"></div>
-
-                {/* High-visibility Glassmorphic Caption Card */}
-                {(photo.title || photo.caption) && (
-                  <div className="recuerdos-caption-glass-card">
-                    {photo.title && (
-                      <div className="recuerdos-caption-badge-row">
-                        <span className="recuerdos-caption-star">✦</span>
-                        <span className="recuerdos-caption-tag">{photo.title}</span>
-                      </div>
-                    )}
-                    {photo.caption && (
-                      <p className="recuerdos-caption-text">{photo.caption}</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+          {/* Active Photo with smooth fade transition */}
+          <div className={`recuerdos-photo-stage anim-${animDirection}`} key={currentIndex}>
+            <img 
+              src={currentPhoto.src} 
+              alt={currentPhoto.title || `Recuerdo ${currentIndex + 1}`} 
+              className="recuerdos-clean-img" 
+            />
           </div>
         </div>
 
-        {/* Minimalist golden pagination dots */}
-        <div className="recuerdos-indicators">
-          {photoList.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              className={`recuerdos-dot ${index === currentIndex ? 'is-active' : ''}`}
-              onClick={() => setCurrentIndex(index)}
-              aria-label={`Ir a foto ${index + 1}`}
-            />
-          ))}
+        {/* Animated Text Caption (Smooth fade-up, beautiful typography, no cursor) */}
+        <div className="recuerdos-caption-minimal" key={`caption-${currentIndex}`}>
+          <h4 className="recuerdos-caption-title-anim">
+            {currentPhoto.title}
+          </h4>
+          <p className="recuerdos-caption-phrase-anim">
+            {currentPhoto.caption}
+          </p>
+        </div>
+
+        {/* Minimalist Thumbnails Strip (Clean rounded previews, no clutter, no emojis) */}
+        <div className="recuerdos-thumbs-minimal-container">
+          <div className="recuerdos-thumbs-row" ref={thumbnailsRef}>
+            {photoList.map((photo, index) => (
+              <button
+                key={index}
+                type="button"
+                className={`recuerdos-thumb-minimal ${index === currentIndex ? 'is-active' : ''}`}
+                onClick={() => handleSelectThumb(index)}
+                aria-label={`Ir a foto ${index + 1}`}
+              >
+                <img 
+                  src={photo.src} 
+                  alt="" 
+                  className="thumb-minimal-img" 
+                  loading="lazy"
+                />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </section>
   );
 }
-
-
-

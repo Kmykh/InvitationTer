@@ -1,11 +1,32 @@
 import React, { useState } from 'react';
-import { MapPin, Navigation, Car, Copy, Check, ExternalLink, Info } from 'lucide-react';
+import { MapPin, Navigation, Car, Copy, Check, ExternalLink, Info, Church, Building2 } from 'lucide-react';
 
-export default function LocationHelper({ locationDetails }) {
+export default function LocationHelper({ locationDetails, churchDetails }) {
+  const [activeTab, setActiveTab] = useState('recepcion'); // 'recepcion' | 'iglesia'
   const [copied, setCopied] = useState(false);
 
+  const venue = activeTab === 'recepcion' 
+    ? {
+        name: locationDetails?.placeName || 'Local de recepciones “La Cantuta del Centro”',
+        address: locationDetails?.address || 'Jr. San Martín - La Punta - Sapallanga',
+        reference: locationDetails?.reference || 'Ref. paradero La Oyada a 2 cuadras subiendo hacia Mallqui',
+        mapsUrl: locationDetails?.googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Cantuta+del+centro+Jr+San+Martin+La+Punta+Sapallanga+Huancayo',
+        wazeUrl: locationDetails?.wazeUrl || 'https://waze.com/ul?q=Jr+San+Martin+Sapallanga',
+        embedUrl: 'https://maps.google.com/maps?q=Jr.+San+Martin,+La+Punta,+Sapallanga,+Huancayo&t=&z=16&ie=UTF8&iwloc=&output=embed',
+        badge: 'RECEPCIÓN & FIESTA'
+      }
+    : {
+        name: churchDetails?.placeName || 'Parroquia San Jacinto - La Punta',
+        address: churchDetails?.address || 'Plaza Principal, La Punta - Sapallanga',
+        reference: 'Misa de Salud a las 12:00 P.M.',
+        mapsUrl: churchDetails?.googleMapsUrl || 'https://www.google.com/maps/search/?api=1&query=Parroquia+San+Jacinto+La+Punta+Sapallanga+Huancayo',
+        wazeUrl: 'https://waze.com/ul?q=Parroquia+San+Jacinto+La+Punta+Sapallanga',
+        embedUrl: 'https://maps.google.com/maps?q=Parroquia+San+Jacinto,+La+Punta,+Sapallanga,+Huancayo&t=&z=16&ie=UTF8&iwloc=&output=embed',
+        badge: 'MISA DE SALUD (12:00 P.M.)'
+      };
+
   const handleCopy = () => {
-    const fullText = `${locationDetails.placeName} - ${locationDetails.address}, Huancayo`;
+    const fullText = `${venue.name} - ${venue.address}. ${venue.reference}`;
     navigator.clipboard.writeText(fullText);
     setCopied(true);
     setTimeout(() => setCopied(false), 3000);
@@ -14,45 +35,72 @@ export default function LocationHelper({ locationDetails }) {
   return (
     <section className="location-helper-section">
       <div className="section-title-wrap">
-        <span className="section-eyebrow">UBICACIÓN EXACTA</span>
-        <h3 className="section-title">Local de Recepción</h3>
+        <span className="section-eyebrow">CÓMO LLEGAR</span>
+        <h3 className="section-title">Ubicaciones del Evento</h3>
         <div className="recuerdos-gold-divider">
           <span className="recuerdos-line"></span>
           <span className="recuerdos-star">✦</span>
           <span className="recuerdos-line"></span>
         </div>
-        <p className="location-venue-name">{locationDetails.placeName}</p>
-        <p className="location-venue-address">{locationDetails.address}</p>
+      </div>
+
+      {/* Tabs between Reception & Church */}
+      <div className="location-tabs-nav">
+        <button
+          type="button"
+          className={`location-tab-btn ${activeTab === 'recepcion' ? 'is-active' : ''}`}
+          onClick={() => setActiveTab('recepcion')}
+        >
+          <Building2 size={16} />
+          <span>Local Recepción</span>
+        </button>
+        <button
+          type="button"
+          className={`location-tab-btn ${activeTab === 'iglesia' ? 'is-active' : ''}`}
+          onClick={() => setActiveTab('iglesia')}
+        >
+          <Church size={16} />
+          <span>Misa (Parroquia)</span>
+        </button>
       </div>
 
       <div className="location-floating-content">
+        <div className="location-venue-card-highlight">
+          <span className="venue-card-badge">{venue.badge}</span>
+          <h4 className="location-venue-name">{venue.name}</h4>
+          <p className="location-venue-address">{venue.address}</p>
+        </div>
+
         {/* Reference text in glassmorphic card */}
         <div className="location-tips-floating">
           <div className="tip-row">
             <div className="tip-icon-badge">
               <Info size={15} />
             </div>
-            <span><strong>Referencia:</strong> {locationDetails.reference}</span>
+            <span><strong>Referencia:</strong> {venue.reference}</span>
           </div>
-          <div className="tip-row">
-            <div className="tip-icon-badge">
-              <Car size={15} />
+          {activeTab === 'recepcion' && (
+            <div className="tip-row">
+              <div className="tip-icon-badge">
+                <Car size={15} />
+              </div>
+              <span><strong>En auto o taxi:</strong> Subir por paradero La Oyada 2 cuadras en dirección a Mallqui.</span>
             </div>
-            <span><strong>En auto o taxi:</strong> Ingreso directo a Jr. San Martín en La Punta - Sapallanga.</span>
-          </div>
+          )}
         </div>
 
-        {/* Embedded Google Map with contoured luxury frame */}
+        {/* Embedded Google Map */}
         <div className="location-map-frame-deluxe">
           <div className="map-frame-header">
             <span className="map-header-dot"></span>
             <span className="map-header-title">MAPA INTERACTIVO</span>
-            <span className="map-header-badge">SAPALLANGA</span>
+            <span className="map-header-badge">LA PUNTA - SAPALLANGA</span>
           </div>
           <div className="map-iframe-container">
             <iframe
-              title="Mapa Cantuta del Centro Sapallanga"
-              src="https://maps.google.com/maps?q=Jr.+San+Martin,+La+Punta,+Sapallanga,+Huancayo&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              key={activeTab}
+              title={`Mapa ${venue.name}`}
+              src={venue.embedUrl}
               className="map-iframe"
               loading="lazy"
               allowFullScreen
@@ -60,11 +108,11 @@ export default function LocationHelper({ locationDetails }) {
           </div>
         </div>
 
-        {/* Compact, well-arranged navigation buttons (side-by-side + copy pill) */}
+        {/* Action buttons */}
         <div className="location-actions-container">
           <div className="location-nav-grid">
             <a
-              href={locationDetails.googleMapsUrl}
+              href={venue.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-nav-app btn-maps"
@@ -80,7 +128,7 @@ export default function LocationHelper({ locationDetails }) {
             </a>
 
             <a
-              href={locationDetails.wazeUrl}
+              href={venue.wazeUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-nav-app btn-waze"
@@ -104,12 +152,12 @@ export default function LocationHelper({ locationDetails }) {
             {copied ? (
               <>
                 <Check size={16} className="text-gold animate-scale-in" />
-                <span>¡Dirección Copiada al Portapapeles!</span>
+                <span>¡Dirección y Referencia Copiadas!</span>
               </>
             ) : (
               <>
                 <Copy size={16} />
-                <span>Copiar dirección para taxi o conductor</span>
+                <span>Copiar dirección y referencia para taxi</span>
               </>
             )}
           </button>
@@ -118,5 +166,3 @@ export default function LocationHelper({ locationDetails }) {
     </section>
   );
 }
-
-
